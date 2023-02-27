@@ -11,12 +11,12 @@ jobs:
     container:
       image: nikolaik/python-nodejs:python3.9-nodejs18-slim
     steps:
-      # - name: Extract branch name
-      #   shell: bash
-      #   run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-      #   id: extract_branch
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
       - name: Install deps
-        run: npm ci
+        run: npm i
       - name: Build and deploy
         run: npm run build-docker
         env:
