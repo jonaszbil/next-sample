@@ -53,3 +53,4 @@ if newPodReady:
     print('SUCCESS')
 else:
     print('TIMED OUT')
+    exit(1)
