@@ -7,10 +7,12 @@ on:
 
 jobs:
   build:
+    name: Build and deploy the app
     runs-on: ubuntu-latest
     container:
       image: nikolaik/python-nodejs:python3.9-nodejs18-slim
     steps:
+      - uses: actions/checkout@v2
       - name: Extract branch name
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
