@@ -13,6 +13,8 @@ jobs:
       image: nikolaik/python-nodejs:python3.9-nodejs18-slim
     steps:
       - uses: actions/checkout@v2
+      - uses: unfor19/install-aws-cli-action@v1
+      - uses: actions-hub/docker@v1.0.3
       - name: Extract branch name
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
