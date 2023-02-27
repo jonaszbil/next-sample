@@ -1,12 +1,10 @@
 {
-  "name": "next-sample",
-  "version": "0.1.0",
+  "type": "module",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "build-docker": "bash build-docker.sh"
   },
   "dependencies": {
     "@next/font": "13.1.1",
