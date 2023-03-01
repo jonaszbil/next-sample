@@ -28,8 +28,8 @@ payload = json.dumps({"config": service_config})
 
 # Set blank config first to ensure service is redeployed
 # TODO - figure out a less hacky way to force redeployment
-requests.patch(microservice_url, json.dumps({"config": {}}),
-               headers=headers, verify=False)
+# requests.patch(microservice_url, json.dumps({"config": {}}),
+#                headers=headers, verify=False)
 
 requests.patch(microservice_url, payload,
                headers=headers, verify=False)
