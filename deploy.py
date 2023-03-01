@@ -21,14 +21,14 @@ pod_name = requests.get(f"{microservice_url}/status", headers=headers,
 print(pod_name)
 
 service_config = requests.get(microservice_url,
-                             headers=headers, verify=False).json()[0]['config']
+                              headers=headers, verify=False).json()[0]['config']
 service_config |= {
     "dockerImage": f"{aws_acc_id}.dkr.ecr.{region}.amazonaws.com/{image}"}
 payload = json.dumps({"config": service_config})
 
 # Set blank config first to ensure service is redeployed
 # TODO - figure out a less hacky way to force redeployment
-requests.patch(microservice_url, {json.dumps({"config": {}})},
+requests.patch(microservice_url, json.dumps({"config": {}}),
                headers=headers, verify=False)
 
 requests.patch(microservice_url, payload,
