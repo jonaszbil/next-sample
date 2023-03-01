@@ -5,12 +5,12 @@ import time
 
 token, microservice_uuid, region, image, aws_acc_id = os.getenv('ADMIN_TOKEN'), os.getenv(
     'MICROSERVICE'), os.getenv('REGION'), os.getenv('IMAGE'), os.getenv('AWS_ACCOUNT_ID')
-if not os.getenv('MICROSERVICE') or not os.getenv('ADMIN_TOKEN'):
+if not all(token, microservice_uuid, region, image, aws_acc_id):
     print('MICROSERVICE, ADMIN_TOKEN, REGION, IMAGE and AWS_ACCOUNT_ID must be set')
     exit(1)
 
-baseUrl = "https://test2.davra.com"
-microservice_url = f"{baseUrl}/api/v1/serviceadmin/{microservice_uuid}"
+base_url = "https://test2.davra.com"
+microservice_url = f"{base_url}/api/v1/serviceadmin/{microservice_uuid}"
 
 headers = {
     "Authorization": f"Bearer {token}", "content-type": "application/json"}
@@ -20,36 +20,38 @@ pod_name = requests.get(f"{microservice_url}/status", headers=headers,
 
 print(pod_name)
 
-serviceConfig = requests.get(microservice_url,
+service_config = requests.get(microservice_url,
                              headers=headers, verify=False).json()[0]['config']
-serviceConfig |= {
+service_config |= {
     "dockerImage": f"{aws_acc_id}.dkr.ecr.{region}.amazonaws.com/{image}"}
-payload = json.dumps({"config": serviceConfig})
+payload = json.dumps({"config": service_config})
+
+# Set blank config first to ensure service is redeployed
+# TODO - figure out a less hacky way to force redeployment
+requests.patch(microservice_url, {json.dumps({"config": {}})},
+               headers=headers, verify=False)
+
 requests.patch(microservice_url, payload,
                headers=headers, verify=False)
 
-print(requests.post(f"{microservice_url}/deploy", {}, headers=headers, verify=False))
+# This should force redeployment, but doesn't work for some reason
+# print(requests.post(f"{microservice_url}/deploy", {}, headers=headers, verify=False))
 
-newPodReady = False
+new_pod_ready = False
 polling_start_time = time.time()
 
-while not newPodReady and time.time() - polling_start_time < 300:
-    time.sleep(1)
+while not new_pod_ready and time.time() - polling_start_time < 300:
+    time.sleep(2)
     service_status = requests.get(
         f"{microservice_url}/status", headers=headers, verify=False).json()
     if len(service_status['pods']) != 1:
-        print('Only 1 pods should be present')
         continue
     current_pod_name = service_status['pods'][0]['metadata']['name']
-    if current_pod_name == pod_name:
-        print('Still using the old pod')
+    if current_pod_name == pod_name or service_status['pods'][0]['status']['phase'] != 'Running':
         continue
-    if service_status['pods'][0]['status']['phase'] != 'Running':
-        print('Pod is not running')
-        continue
-    newPodReady = True
+    new_pod_ready = True
 
-if newPodReady:
+if new_pod_ready:
     print('SUCCESS')
 else:
     print('TIMED OUT')
