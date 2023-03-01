@@ -5,7 +5,7 @@ import time
 
 token, microservice_uuid, region, image, aws_acc_id = os.getenv('ADMIN_TOKEN'), os.getenv(
     'MICROSERVICE'), os.getenv('REGION'), os.getenv('IMAGE'), os.getenv('AWS_ACCOUNT_ID')
-if not all(token, microservice_uuid, region, image, aws_acc_id):
+if not all([token, microservice_uuid, region, image, aws_acc_id]):
     print('MICROSERVICE, ADMIN_TOKEN, REGION, IMAGE and AWS_ACCOUNT_ID must be set')
     exit(1)
 
