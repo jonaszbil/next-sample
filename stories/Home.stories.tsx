@@ -1,7 +1,7 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-import HomeElem from './index';
+import HomeElem from '../pages/index';
 
 export default {
   title: 'Pages/Home',
