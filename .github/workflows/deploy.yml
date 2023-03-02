@@ -1,0 +1,43 @@
+name: "Build and deploy to microservice"
+
+on:
+  push:
+    branches:
+      - 'staging'
+
+jobs:
+  deployment:
+    name: Build and deploy the app
+    environment: staging
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3.6.0
+        with:
+          node-version: 18
+      - uses: actions/setup-python@v4.5.0
+        with:
+          python-version: 'pypy3.9'
+      - uses: unfor19/install-aws-cli-action@v1
+      - uses: actions-hub/docker/cli@master
+        env:
+          SKIP_LOGIN: true
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+      - name: Install deps
+        run: npm ci
+      - name: Build and deploy
+        run: npm run build-docker
+        env:
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          REGION: eu-west-1
+          IMAGE: jbtest:${{ steps.extract_branch.outputs.branch }}-${{github.run_number}}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          MICROSERVICE: ${{ secrets.MICROSERVICE }}
+          ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+
+          
+
