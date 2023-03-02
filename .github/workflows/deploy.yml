@@ -6,7 +6,20 @@ on:
       - 'staging'
 
 jobs:
+  unit_test:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3.6.0
+        with:
+          node-version: 18
+      - name: Install deps and test
+        run: |
+            npm ci
+            npm test
   build: 
+    needs: unit_test
     name: Build Docker image
     runs-on: ubuntu-latest
     steps:
