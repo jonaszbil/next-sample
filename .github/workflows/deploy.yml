@@ -16,8 +16,8 @@ jobs:
           node-version: 18
       - name: Install deps and test
         run: |
-            npm ci
-            npm test
+            yarn --frozen-lockfile
+            yarn test
   build: 
     needs: unit_test
     name: Build Docker image
@@ -32,7 +32,7 @@ jobs:
         env:
           SKIP_LOGIN: true
       - name: Build image
-        run: npm run build-docker
+        run: yarn build-docker
         env:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
           REGION: eu-west-1
@@ -51,7 +51,7 @@ jobs:
         with:
           python-version: 'pypy3.9'
       - name: Deploy
-        run: npm run deploy
+        run: yarn deploy
         env:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
           REGION: eu-west-1
@@ -71,8 +71,8 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 18
-      - run: npm ci
+      - run: yarn --frozen-lockfile
       - name: Run tests
-        run: HOME=/root npm run test:e2e
+        run: HOME=/root yarn test:e2e
         env: 
           BASE_URL: https://jbtest2-test2.apps.eu2.davra.com
