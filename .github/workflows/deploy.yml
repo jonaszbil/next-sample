@@ -58,3 +58,21 @@ jobs:
           IMAGE: jbtest:staging-${{github.run_number}}
           MICROSERVICE: ${{ secrets.MICROSERVICE }}
           ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+  playwright-test:
+    name: Run Playwright tests
+    needs: deployment
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.31.0-focal
+    steps:
+      - name: Prepare testing env
+        uses: actions/checkout@v3
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 18
+      - run: npm ci
+      - name: Run tests
+        run: HOME=/root npm run test:e2e
+        env: 
+          BASE_URL: https://jbtest2-test2.apps.eu2.davra.com
