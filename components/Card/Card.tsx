@@ -11,7 +11,7 @@ const Card: FC<{ title: string; text: string; color: string }> = ({ title, text,
         <h2 className="mb-6 font-big-shoulders text-5xl font-bold tracking-wider">{title}</h2>
         <p data-testid='card-text' className="font-lexend text-[14px] leading-6 opacity-75">{text}</p>
       </div>
-      <Button onClick={() => setWasClicked(prev => !prev)}>{wasClicked ? 'clicked' : 'Click me'}</Button>
+      <Button onClick={() => setWasClicked(prev => !prev)}>{wasClicked ? 'Clicked' : 'Click me'}</Button>
     </div>
   );
 };
