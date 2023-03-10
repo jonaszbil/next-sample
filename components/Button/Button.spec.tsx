@@ -41,5 +41,5 @@ describe("Button", () => {
     const btnElement = screen.getByRole("button");
     fireEvent.click(btnElement);
     expect(mockFn).toHaveBeenCalledTimes(0);
-  })
+  });
 });
