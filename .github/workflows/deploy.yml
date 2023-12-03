@@ -59,10 +59,11 @@ jobs:
           IMAGE: jbtest:staging-${{github.run_number}}
           MICROSERVICE: ${{ secrets.MICROSERVICE }}
           ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
-          TENANT_URL: ${{ env.TENANT_URL }}
+          TENANT_URL: ${{ vars.TENANT_URL }}
   playwright-test:
     name: Run Playwright tests
     needs: deployment
+    environment: staging
     timeout-minutes: 10
     runs-on: ubuntu-latest
     container:
@@ -77,4 +78,4 @@ jobs:
       - name: Run tests
         run: HOME=/root yarn test:e2e
         env: 
-          BASE_URL: https://jbtest2-test2.apps.eu2.davra.com
+          BASE_URL: ${{ vars.BASE_URL }}
