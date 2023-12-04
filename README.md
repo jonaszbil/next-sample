@@ -25,6 +25,9 @@ Once the branch is selected, environment variables have to be configured. Sensit
 1. `BASE_URL` - url for the deployed microservice, e.g. `https://sampleapp-test2.apps.eu2.davra.com`
 2. `TENANT_URL` - url for the tenant on which the microservice lives, e.g. `https://test2.davra.com`
 
+With the variables set, it should look something like this:
+<img width="791" alt="Screenshot 2023-12-04 at 09 19 09" src="https://github.com/jonaszbil/next-sample/assets/79643069/ff694c90-a1b3-46e0-99a8-6b9fd76baec8">
+
 ### Project secrets
 Once the env-specific variables are set, project-wide secrets need to be set. Go to `Settings` > `Secrets and variables` > `Actions`. Six secrets need to be set under `Repository secrets`:
 1. `ADMIN_TOKEN` - use an admin token from the same tenant where your microservice lives. If the project is meant to handle deployments to various tenants, this should be saved as an `Environment secret` instead, so that each workflow can use the correct token for its env.
